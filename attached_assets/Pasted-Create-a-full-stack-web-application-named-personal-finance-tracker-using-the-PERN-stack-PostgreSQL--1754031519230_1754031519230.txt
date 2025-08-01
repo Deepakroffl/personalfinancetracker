@@ -1,0 +1,132 @@
+Create a full-stack web application named personal-finance-tracker using the PERN stack (PostgreSQL, Express, React, Node.js). This app will track personal and family expenses with three main modules:
+
+📦 Project Structure:
+/client → React frontend
+
+/server → Node.js + Express backend
+
+/server/db.js → PostgreSQL connection using pg package
+
+🧩 Features to Include:
+1. 🧑‍💼 User Authentication Module:
+Register & Login using email and password
+
+Store passwords securely hashed using bcrypt
+
+Use JWT for authentication and session handling
+
+✅ Backend Routes:
+
+POST /api/register → Register new user
+
+POST /api/login → Login and return JWT token
+
+GET /api/user → Return logged-in user's details (JWT protected)
+
+2. 💳 Transaction Module (Simulated Bank Accounts):
+Users can create bank accounts (e.g., HDFC, SBI)
+
+Add credit or debit transactions manually
+
+Each transaction includes:
+
+amount, type (credit/debit), description, date, bankAccountId
+
+✅ Backend Routes:
+
+POST /api/accounts → Create bank account
+
+GET /api/accounts/:user_id → Get user’s bank accounts
+
+POST /api/transactions → Add a transaction
+
+GET /api/accounts/:account_id/transactions → Get transaction history
+
+3. 👪 Split Expense Module:
+User can add group expense with:
+
+payerName, amount, description, participants (array of names)
+
+System should calculate and return:
+
+Who paid what
+
+Who owes how much
+
+Final split per person
+
+All splits should be saved in history with edit and delete features
+
+✅ Backend Routes:
+
+POST /api/split-expense → Calculate and store split
+
+GET /api/split-history → View all splits
+
+PUT /api/split-history/:id → Edit a split
+
+DELETE /api/split-history/:id → Delete a split
+
+🗄️ Database Tables to Create:
+users (id, email, password)
+
+bank_accounts (id, user_id, name)
+
+transactions (id, account_id, amount, type, description, date)
+
+split_expenses (id, user_id, payer_name, amount, description, date)
+
+split_participants (id, expense_id, name, share_amount)
+
+⚙️ Additional Configuration:
+Use .env to store:
+
+PostgreSQL connection string
+
+JWT secret
+
+Use express.json() and enable CORS middleware
+
+Use pg to connect to PostgreSQL
+
+Use axios in React frontend to call backend API
+
+🎨 React Frontend Features:
+Register & Login pages (store JWT in localStorage or cookies)
+
+Create Bank Account form
+
+Add Transaction form
+
+Select account to view transaction history
+
+Add Split Expense form
+
+Display split result
+
+View Split History (with edit and delete buttons)
+
+🔄 Final Step:
+Run both frontend and backend servers together
+
+Confirm that all backend routes are working using dummy data
+
+Confirm frontend is connected and working end-to-end
+
+✅ Output Should Include:
+
+Working React frontend
+
+Connected Express backend
+
+Functional PostgreSQL database
+
+Functional modules:
+
+✅ User Authentication
+
+✅ Transaction Module (manual credit/debit)
+
+✅ Split Expense Module (with history, edit/delete)
+
+This app is for demo/personal use. Real bank API integration is not required.
