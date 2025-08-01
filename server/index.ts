@@ -56,19 +56,6 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  if (process.env.NODE_ENV === "production") {
-  import path from "path";
-  import { fileURLToPath } from "url";
-
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-
-  app.use(express.static(path.join(__dirname, "public")));
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
-  });
-}
 
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
