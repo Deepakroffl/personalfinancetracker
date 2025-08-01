@@ -114,4 +114,10 @@ export function setupAuth(app: Express) {
     if (!req.isAuthenticated()) return res.sendStatus(401);
     res.json(req.user);
   });
+
+  // Place after all your app.use and routes:
+app.use((err, req, res, next) => {
+  res.status(500).json({ success: false, error: err.message || "Internal server error" });
+});
+
 }
