@@ -14,6 +14,7 @@ import { insertBankAccountSchema, insertTransactionSchema, insertSplitExpenseSch
 import { z } from "zod";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import type { BankAccount, Transaction, SplitExpense, SplitParticipant } from "@shared/schema";
 import { 
   Wallet, 
   TrendingUp, 
@@ -45,15 +46,15 @@ export default function HomePage() {
   const [isAddSplitOpen, setIsAddSplitOpen] = useState(false);
 
   // Queries
-  const { data: accounts = [] } = useQuery({
+  const { data: accounts = [] } = useQuery<BankAccount[]>({
     queryKey: ["/api/accounts"],
   });
 
-  const { data: transactions = [] } = useQuery({
+  const { data: transactions = [] } = useQuery<(Transaction & { accountName: string })[]>({
     queryKey: ["/api/transactions"],
   });
 
-  const { data: splitExpenses = [] } = useQuery({
+  const { data: splitExpenses = [] } = useQuery<(SplitExpense & { participants: SplitParticipant[] })[]>({
     queryKey: ["/api/split-history"],
   });
 
@@ -129,14 +130,14 @@ export default function HomePage() {
   });
 
   // Calculate dashboard stats
-  const totalBalance = accounts.reduce((sum: number, account: any) => sum + parseFloat(account.balance || "0"), 0);
+  const totalBalance = accounts.reduce((sum, account) => sum + parseFloat(account.balance || "0"), 0);
   const monthlyIncome = transactions
-    .filter((t: any) => t.type === "credit")
-    .reduce((sum: number, t: any) => sum + parseFloat(t.amount || "0"), 0);
+    .filter((t) => t.type === "credit")
+    .reduce((sum, t) => sum + parseFloat(t.amount || "0"), 0);
   const monthlyExpenses = transactions
-    .filter((t: any) => t.type === "debit")
-    .reduce((sum: number, t: any) => sum + parseFloat(t.amount || "0"), 0);
-  const totalSplitExpenses = splitExpenses.reduce((sum: number, expense: any) => sum + parseFloat(expense.amount || "0"), 0);
+    .filter((t) => t.type === "debit")
+    .reduce((sum, t) => sum + parseFloat(t.amount || "0"), 0);
+  const totalSplitExpenses = splitExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount || "0"), 0);
 
   const recentTransactions = transactions.slice(0, 5);
 
@@ -303,7 +304,7 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {accounts.map((account: any, index) => (
+          {accounts.map((account, index) => (
             <Card key={account.id} className="overflow-hidden">
               <div className={`p-6 text-white ${
                 index % 3 === 0 ? 'bg-gradient-to-r from-primary to-primary/80' :
@@ -374,7 +375,7 @@ export default function HomePage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {transactions.map((transaction: any) => (
+                  {transactions.map((transaction) => (
                     <tr key={transaction.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {format(new Date(transaction.date), 'MMM dd, yyyy')}
@@ -434,7 +435,7 @@ export default function HomePage() {
         </div>
 
         <div className="space-y-4">
-          {splitExpenses.map((expense: any) => (
+          {splitExpenses.map((expense) => (
             <Card key={expense.id}>
               <CardContent className="p-6">
                 <div className="flex justify-between items-start mb-4">
@@ -691,7 +692,7 @@ export default function HomePage() {
                   <SelectValue placeholder="Select account" />
                 </SelectTrigger>
                 <SelectContent>
-                  {accounts.map((account: any) => (
+                  {accounts.map((account) => (
                     <SelectItem key={account.id} value={account.id}>
                       {account.name}
                     </SelectItem>

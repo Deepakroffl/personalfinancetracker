@@ -30,10 +30,6 @@ export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
 
-  if (user) {
-    return <Redirect to="/" />;
-  }
-
   const loginForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -60,8 +56,12 @@ export default function AuthPage() {
     registerMutation.mutate(data);
   };
 
+  if (user) {
+    return <Redirect to="/" />;
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-success-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-green-50 px-4">
       <div className="max-w-md w-full">
         <Card className="shadow-xl">
           <CardContent className="pt-8 p-8">
@@ -215,7 +215,7 @@ export default function AuthPage() {
                 <Button
                   type="submit"
                   disabled={registerMutation.isPending}
-                  className="w-full bg-success hover:bg-success/90"
+                  className="w-full bg-green-600 hover:bg-green-700"
                 >
                   {registerMutation.isPending ? (
                     <>

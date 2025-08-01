@@ -99,10 +99,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const splitExpense = await storage.createSplitExpense(req.user!.id, validatedExpenseData);
       
       // Calculate equal split
-      const participantNames = participants.split(',').map((name: string) => name.trim());
+      const participantNames = participants.split(',').map((name) => name.trim());
       const shareAmount = (parseFloat(validatedExpenseData.amount) / participantNames.length).toFixed(2);
       
-      const splitParticipants = participantNames.map((name: string) => ({
+      const splitParticipants = participantNames.map((name) => ({
         name,
         shareAmount,
       }));
