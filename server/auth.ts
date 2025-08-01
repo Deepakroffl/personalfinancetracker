@@ -64,8 +64,8 @@ export function setupAuth(app: Express) {
         } catch (error) {
           return done(error);
         }
-      },
-    ),
+      }
+    )
   );
 
   passport.serializeUser((user, done) => done(null, user.id));
@@ -78,6 +78,7 @@ export function setupAuth(app: Express) {
     }
   });
 
+  // ✅ REGISTER
   app.post("/api/register", async (req, res, next) => {
     try {
       const existingUser = await storage.getUserByEmail(req.body.email);
@@ -91,18 +92,26 @@ export function setupAuth(app: Express) {
       });
 
       req.login(user, (err) => {
-        if (err) return next(err);
-        res.status(201).json(user);
+        if (err) {
+          console.error("Login error after registration:", err);
+          return res
+            .status(500)
+            .json({ message: "Login failed after registration" });
+        }
+        return res.status(201).json(user); // ✅ Always respond
       });
     } catch (error) {
-      next(error);
+      console.error("Registration error:", error);
+      return res.status(500).json({ message: "Registration failed" });
     }
   });
 
+  // ✅ LOGIN
   app.post("/api/login", passport.authenticate("local"), (req, res) => {
     res.status(200).json(req.user);
   });
 
+  // ✅ LOGOUT
   app.post("/api/logout", (req, res, next) => {
     req.logout((err) => {
       if (err) return next(err);
@@ -110,14 +119,9 @@ export function setupAuth(app: Express) {
     });
   });
 
+  // ✅ GET CURRENT USER
   app.get("/api/user", (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
     res.json(req.user);
   });
-
-  // Place after all your app.use and routes:
-app.use((err, req, res, next) => {
-  res.status(500).json({ success: false, error: err.message || "Internal server error" });
-});
-
 }
